@@ -27,7 +27,11 @@
 							<h4 id="item-subtitle">.</h4>
 						</div>
 						<p id="item-description">!</p>
-						<button class="cotizar-ahora">Cotizar Ahora</button>
+						<a id="item-href" target="_blank" href="">
+							<button class="cotizar-ahora">
+								<img src="/assts/wtsap.svg" alt="WhatssApp"> Comprar por WhatssApp
+							</button>
+						</a>
 					</div>
 					<div id="detalles">
 						!
@@ -56,6 +60,9 @@
 		const subtitle = document.getElementById('item-subtitle');
 		const description = document.getElementById('item-description');
 		const detalles = document.getElementById('detalles');
+		const enlace = document.getElementById('item-href');
+		const telefonoWhatsApp = '5212221427946';
+
 
 		if (item === 'navidad1') {
 			foto1.style.backgroundImage = "url('../assts/navidad1/01.png')";
@@ -65,7 +72,9 @@
 			title.textContent = 'Nacimiento navideño';
 			subtitle.textContent = 'Nacimiento Navideño de MDF - Pesebre Sagrada Familia con Base Rústica - Decoración Navideña';
 			description.textContent = 'Un diseño tierno y moderno que representa lo más importante de la temporada: el nacimiento del Niño Jesús.\n \n Fabricado en MDF de alta calidad de 3mm, con corte láser de precisión y pintura acrílica no tóxica en tonos cálidos. Cada capa crea un hermoso efecto 3D que le da profundidad y vida a la escena.\n\nHecho con mucho cariño en taller mexicano. Cada pieza puede tener ligeras variaciones por ser pintado a mano, lo que lo hace único.';
-			detalles.textContent = 'Alto: 23 cms \n Ancho: 12 cms'; }
+			const mensaje = 'Hola me gustaría comprar el nacimiento navideño de MDF que he visto en su sitio web Kanul :) !!';
+			detalles.textContent = 'Alto: 23 cms \n Ancho: 12 cms';
+			enlace.href = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;}
 
 			else if (item === 'bainnina2') {
 			foto1.style.backgroundImage = "url('../assts/inv.webp')";
