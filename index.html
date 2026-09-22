@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="assts/styles001.css">
+	<link rel="icon" href="assts/favicon.ico">
+	<title>Kanul Sitio oficial</title>
+</head>
+<body>
+	<div class="container">
+		<header id="nav"></header>
+		<main id="main">
+			<div class="hero-container">
+				<section id="hero1" aria-labelledby="hero-title" class="hero-section" style="background-image: url(assts/hero1.jpg);">
+					<div>
+						<h1>Título principal del sitio</h1>
+						<p>Descripción o propuesta de valor.</p>
+						<a href="">Contáctanos</a>
+						<span>⬤〇〇</span>
+					</div>
+				</section>
+				<section id="hero2" aria-labelledby="hero-title" class="hero-section" style="background-image: url(assts/hero2.webp);">
+					<div>
+						<h1>Título principal del sitio 2</h1>
+						<p>Descripción o propuesta de valor.</p>
+						<a href="">Contáctanos</a>
+						<span>〇⬤〇</span>
+					</div>
+				</section>
+				<section id="hero3" aria-labelledby="hero-title" class="hero-section" style="background-image: url(assts/hero1.jpg);">
+					<div>
+						<h1>Título principal del sitio 3</h1>
+						<p>Descripción o propuesta de valor.</p>
+						<a href="">Contáctanos</a>
+						<span>〇〇⬤</span>
+					</div>
+				</section>
+			</div>
+			<section class="destacados">
+				<article style="background-image: url(assts/hero1.jpg);">
+					<div>
+						<h2>Lorem Ipsum Dolor</h2>
+						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+						<a href="">Mas Info</a>
+					</div>
+				</article>
+				<article style="background-image: url(assts/hero2.webp);">
+					<div>
+						<h2>Lorem Ipsum Dolor</h2>
+						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+						<a href="">Mas Info</a>
+					</div>
+				</article>
+			</section>
+			<h2 style="padding: 3rem 3rem 0 3rem;color: #167c85;">Tendencias</h2>
+			<section class="best-sellers">
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				<article>
+					<div class="best-seller-image" style="background-image: url(assts/article.png);"></div>
+					<h3>Lorem Ipsum Dolor</h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+					<a href="">Cotizar</a>
+				</article>
+				
+			</section>
+		</main>
+		<footer id="main-footer">
+		</footer>
+	</div>
+</body>
+</html>
+<script>
+	//============================================================
+	// Import Nav
+	//============================================================
+	async function cargarNav(url, selector = '#nav') {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			throw new Error(`Error HTTP: ${response.status}`);
+		}
+
+		const html = await response.text();
+		document.querySelector(selector).innerHTML = html;
+
+		return html;
+	}
+	document.addEventListener('DOMContentLoaded', () => {
+		cargarNav('assts/nav.html');
+	});
+
+	//===================================
+	// Import Footer
+	//===================================
+	async function cargarFooter(url, selector = '#main-footer') {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			throw new Error(`Error HTTP: ${response.status}`);
+		}
+
+		const html = await response.text();
+		document.querySelector(selector).innerHTML = html;
+
+		return html;
+	}
+	document.addEventListener('DOMContentLoaded', () => {
+		cargarFooter('../assts/footer.html');
+	});
+
+	//=============================================================
+	//Rotacion Hero Images
+	//=============================================================
+	const heroes = [
+		document.getElementById('hero1'),
+		document.getElementById('hero2'),
+		document.getElementById('hero3')
+	];
+
+	let current = 0;
+
+	function rotateHero() {
+		heroes.forEach(hero => {
+			hero.classList.remove('active');
+		});
+
+		heroes[current].classList.add('active');
+
+		current = (current + 1) % heroes.length;
+	}
+
+	rotateHero();
+	setInterval(rotateHero, 7000);
+
+	//=================================================================
+	// Carga dinamica de sub sitos
+	// ================================================================
+	async function cargarMain(url, selector = '#main', timeout = 20000) {
+		const main = document.querySelector(selector);
+		if (!main) {
+			return;
+		}
+		const contenidoPrevio = main.innerHTML;
+		main.innerHTML = `
+        <div class="main-loader">
+            <span class="main-loader__spinner"></span>
+            <span>Cargando...</span>
+        </div>
+		`;
+		const controller = new AbortController();
+		const timer = setTimeout(() => controller.abort(), timeout);
+		try {
+			const response = await fetch(url, {
+				signal: controller.signal
+			});
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
+			}
+			const html = await response.text();
+			clearTimeout(timer);
+			main.innerHTML = html;
+		} catch (error) {
+			clearTimeout(timer);
+			main.innerHTML = contenidoPrevio;
+		}
+	}
+	document.addEventListener('click', function (e) {
+		const button = e.target.closest('.nav-btn');
+		if (!button) return;
+		const page = button.dataset.page;
+		cargarMain(page);
+	});
+
+	//================================================================
+	// Control de navs extended / sub menus
+	//================================================================
+	function switchDiv(targetId) {
+		const target = document.getElementById(targetId);
+		if (!target) {
+			console.error(`No se encontró #${targetId}`);
+			return;
+		}
+		document.querySelectorAll('.switch-content').forEach(div => {
+			div.classList.remove('active');
+		});
+		target.classList.add('active');
+	}
+	document.addEventListener('click', function (e) {
+		const button = e.target.closest('.switch-btn');
+		if (!button) return;
+		switchDiv(button.dataset.target);
+	});
+	
+</script>

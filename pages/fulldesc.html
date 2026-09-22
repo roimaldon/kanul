@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../assts/styles001.css">
+	<link rel="icon" href="../assts/favicon.ico">
+	<title>Kanul Sitio oficial</title>
+</head>
+<body>
+	<div class="container">
+		<header id="nav"></header>
+		<main id="main">
+			<section class="section-desc">
+				<div class="img-container-desc">
+					<div class="desc-image" id="foto1"></div>
+					<div class="desc-image" id="foto2"></div>
+				</div>
+				<div class="img-container-desc">
+					<div class="desc-image" id="foto3"></div>
+					<div class="desc-image" id="foto4"></div>
+				</div>
+				<div class="third-column-desc">
+					<div style="display: flex;flex-direction: column;gap: 2rem;">
+						<div style="display: flex;flex-direction: column;justify-content: flex-start;">
+							<h3 id="item-title">.</h3>
+							<h4 id="item-subtitle">.</h4>
+						</div>
+						<p id="item-description">!</p>
+						<button class="cotizar-ahora">Cotizar Ahora</button>
+					</div>
+					<div id="detalles">
+						!
+					</div>
+				</div>
+
+				
+			</section>
+		</main>
+		<footer id="main-footer">
+		</footer>
+	</div>
+</body>
+</html>
+<script>
+	//============================================================
+	// Desplegar contenido correspondiente
+	//============================================================
+	function aplicarVariante() {
+		const item = new URLSearchParams(window.location.search).get('item');
+		const foto1 = document.getElementById('foto1');
+		const foto2 = document.getElementById('foto2');
+		const foto3 = document.getElementById('foto3');
+		const foto4 = document.getElementById('foto4');
+		const title = document.getElementById('item-title');
+		const subtitle = document.getElementById('item-subtitle');
+		const description = document.getElementById('item-description');
+		const detalles = document.getElementById('detalles');
+
+		if (item === 'navidad1') {
+			foto1.style.backgroundImage = "url('../assts/navidad1/01.png')";
+			foto2.style.backgroundImage = "url('../assts/navidad1/02.png')";
+			foto3.style.backgroundImage = "url('../assts/navidad1/03.png')";
+			foto4.style.backgroundImage = "url('../assts/navidad1/04.png')";
+			title.textContent = 'Nacimiento navideño';
+			subtitle.textContent = 'Nacimiento Navideño de MDF - Pesebre Sagrada Familia con Base Rústica - Decoración Navideña';
+			description.textContent = 'Un diseño tierno y moderno que representa lo más importante de la temporada: el nacimiento del Niño Jesús.\n \n Fabricado en MDF de alta calidad de 3mm, con corte láser de precisión y pintura acrílica no tóxica en tonos cálidos. Cada capa crea un hermoso efecto 3D que le da profundidad y vida a la escena.\n\nHecho con mucho cariño en taller mexicano. Cada pieza puede tener ligeras variaciones por ser pintado a mano, lo que lo hace único.';
+			detalles.textContent = 'Alto: 23 cms \n Ancho: 12 cms'; }
+
+			else if (item === 'bainnina2') {
+			foto1.style.backgroundImage = "url('../assts/inv.webp')";
+			foto2.style.backgroundImage = "url('../assts/inv.webp')";
+			foto3.style.backgroundImage = "url('../assts/inv.webp')";
+			foto4.style.backgroundImage = "url('../assts/inv.webp')";
+			title.textContent = 'Titulo Bainnina 02';
+			detalles.textContent = 'Talla real. Te recomendamos pedir tu talla habitual.';
+			description.textContent = 'Lorem ipsum, dolor sit amet consectetur, adipisicing elit. Repudiandae provident, dolore quo nisi repellendus dolorem, optio? Enim, et quaerat illum fuga aut, sed itaque tenetur minus atque, nulla distinctio nisi.'; }
+
+
+	}
+	document.addEventListener('DOMContentLoaded', aplicarVariante);
+
+
+	//============================================================
+	// Import Nav
+	//============================================================
+	async function cargarNav(url, selector = '#nav') {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			throw new Error(`Error HTTP: ${response.status}`);
+		}
+
+		const html = await response.text();
+		document.querySelector(selector).innerHTML = html;
+
+		return html;
+	}
+	document.addEventListener('DOMContentLoaded', () => {
+		cargarNav('../assts/nav.html');
+	});
+
+	//===================================
+	// Import Footer
+	//===================================
+	async function cargarFooter(url, selector = '#main-footer') {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			throw new Error(`Error HTTP: ${response.status}`);
+		}
+
+		const html = await response.text();
+		document.querySelector(selector).innerHTML = html;
+
+		return html;
+	}
+	document.addEventListener('DOMContentLoaded', () => {
+		cargarFooter('../assts/footer.html');
+	});
+
+
+	//=================================================================
+	// Carga dinamica de sub sitos
+	// ================================================================
+	async function cargarMain(url, selector = '#main', timeout = 20000) {
+		const main = document.querySelector(selector);
+		if (!main) {
+			return;
+		}
+		const contenidoPrevio = main.innerHTML;
+		main.innerHTML = `
+        <div class="main-loader">
+            <span class="main-loader__spinner"></span>
+            <span>Cargando...</span>
+        </div>
+		`;
+		const controller = new AbortController();
+		const timer = setTimeout(() => controller.abort(), timeout);
+		try {
+			const response = await fetch(url, {
+				signal: controller.signal
+			});
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
+			}
+			const html = await response.text();
+			clearTimeout(timer);
+			main.innerHTML = html;
+		} catch (error) {
+			clearTimeout(timer);
+			main.innerHTML = contenidoPrevio;
+		}
+	}
+	document.addEventListener('click', function (e) {
+		const button = e.target.closest('.nav-btn');
+		if (!button) return;
+		const page = button.dataset.page;
+		cargarMain(page);
+	});
+
+	//================================================================
+	// Control de navs extended / sub menus
+	//================================================================
+	function switchDiv(targetId) {
+		const target = document.getElementById(targetId);
+		if (!target) {
+			console.error(`No se encontró #${targetId}`);
+			return;
+		}
+		document.querySelectorAll('.switch-content').forEach(div => {
+			div.classList.remove('active');
+		});
+		target.classList.add('active');
+	}
+	document.addEventListener('click', function (e) {
+		const button = e.target.closest('.switch-btn');
+		if (!button) return;
+		switchDiv(button.dataset.target);
+	});
+
+</script>
+<style>
+	.section-desc {
+		display:flex;flex-direction: row; justify-content: center;white-space: pre-line;
+	}
+	.img-container-desc {
+		width: 33.3%;display: flex;flex-direction: column;
+	}
+	.third-column-desc { 
+		width: 33.3%;display: flex;flex-direction: column;justify-content: space-between;padding: 2rem;gap:2rem 
+	}
+	.section-desc h4 {
+		font-size: 1rem; font-weight: 400;color: #166A71;font-style: italic;
+	}
+	@media screen and (max-width: 768px) {
+		.section-desc { flex-direction: column;}
+		.img-container-desc { width:100% }
+		.third-column-desc { width:100% }
+	}
+</style>
